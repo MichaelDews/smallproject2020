@@ -1,4 +1,4 @@
-var urlBase = 'http://COP4331-3.com/LAMPAPI';
+var urlBase = 'http://cop4331contacts3.com/LAMPAPI';
 var extension = 'php';
 
 var userId = 0;
@@ -40,7 +40,7 @@ function doLogin() {
 
 		saveCookie();
 
-		window.location.href = "color.html";
+		window.location.href = "contacts.html";
 	}
 	catch (err) {
 		document.getElementById("loginResult").innerHTML = err.message;
