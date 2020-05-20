@@ -3,6 +3,9 @@
   $inData = getRequestInfo();
 
   $id = 0;
+  // grab input data and prevent sql injections
+  $username = nosql($inData["username"]);
+  $password = nosql($inData["password"]);
   firstName = "";
   lastName = "";
 
@@ -13,7 +16,7 @@
   }
   else
   {
-    $sql = "SELECT ID,firstName,lastName FROM Users where Login='" . $inData["login"] . "' and Password='" . $inData["password"] . "'";
+    $sql = "SELECT ID,firstName,lastName FROM Users where Login='" . $username . "' and Password='" . $password . "'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0)
     {
@@ -52,5 +55,22 @@
   {
     $retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
 		sendResultInfoAsJson( $retValue );
+  }
+
+  function nosql( $string )
+  {
+    // this gets rid of common sql injections in the user input
+    $string = str_replace( "NUL", "\\0", $string );
+    $string = str_replace( "BS", "\\b", $string );
+    $string = str_replace( "TAB", "\\t", $string );
+    $string = str_replace( "LF", "\\n", $string );
+    $string = str_replace( "CR", "\\r", $string );
+    $string = str_replace( "SUB", "\\z", $string );
+    $string = str_replace( '"', "\\Z", $string );
+    $string = str_replace( "%", "\\%", $string );
+    $string = str_replace( "'", "\\'", $string );
+    $string = str_replace( "\\", "\\\\", $string );
+    $string = str_replace( "_", "\\_", $string );
+    return $string;
   }
  ?>
