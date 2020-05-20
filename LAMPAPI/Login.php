@@ -13,13 +13,13 @@
   }
   else
   {
-    $sql = "SELECT ID, FirstName, LastName FROM Users where Username = '" . $inData["Username"] . "' and Password='" . $inData["Password"] . "'";
+    $sql = "SELECT ID,firstName,lastName FROM Users where Login='" . $inData["login"] . "' and Password='" . $inData["password"] . "'";
     $result = $conn->query($sql);
     if ($result->num_rows > 0)
     {
       $row = $result->fetch_assoc();
-      $firstName = $row["FirstName"];
-			$lastName = $row["LastName"];
+      $firstName = $row["firstName"];
+			$lastName = $row["lastName"];
 			$id = $row["ID"];
 
       returnWithInfo($firstName, $lastName, $id );
