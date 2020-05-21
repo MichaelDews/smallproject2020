@@ -45,7 +45,54 @@ function doLogin() {
 	catch (err) {
 		document.getElementById("loginResult").innerHTML = err.message;
 	}
+}
 
+function createAccount() {
+	userId = 0;
+
+	var firstName = document.getElementById("firstName").value;
+	var lastName = document.getElementById("lastName").value;
+	var userName = document.getElementById("newLoginName").value;
+	var password1 = document.getElementById("loginPassword1").value;
+	var password2 = document.getElementById("loginPassword2").value;
+
+	if(firstName == null || firstName == "", lastName == null || lastName == "", 
+		userName == null || userName == "", password1 == null || password1 == "", password2 == null || password2 == "") {
+			document.getElementById("createAccountResult").innerHTML = "Please fill all required fields";
+			return;
+		}
+
+	if(password1 != password2) {
+		document.getElementById("createAccountResult").innerHTML = "Passwords do not match. Please try again";
+		return;
+	}
+
+	//	var hash = md5( password );
+
+	document.getElementById("createAccountResult").innerHTML = "";
+
+	//	var jsonPayload = '{"login" : "' + login + '", "password" : "' + hash + '"}';
+	var jsonPayload = `{"firstName": "${firstName}", "lastName": "${lastName}", "login": "${userName}", "password": "${password1}"}`;
+	var url = urlBase + '/AddLogin.' + extension;
+
+	console.log(jsonPayload);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, false);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try {
+		xhr.send(jsonPayload);
+
+		var jsonObject = JSON.parse(xhr.responseText);
+
+		userId = jsonObject.id;
+
+		saveCookie();
+
+		window.location.href = "contacts.html";
+	}
+	catch (err) {
+		document.getElementById("createAccountResult").innerHTML = err.message;
+	}
 }
 
 function saveCookie() {
