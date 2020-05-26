@@ -1,12 +1,78 @@
 <html>
 
 <head>
+	<script type="text/javascript" src="js/code.js"></script>
 	<link href="css/styles.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', function () {
+			readCookie();
+		}, false);
+	</script>
+
 </head>
 
 <body>
-    hello contacts go here
+
+	<button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Sign out </button>
+	<h1 id="title">Contacts</h1>
+
+	<div id="loggedInDiv">
+		<h3 class="titleSmall">Logged in as <span id="userName" class="titleSma">asd</span></h3><br />
+		<div id="accessUIDiv">
+			<div style="padding-top: 10px;">
+				<input type="text" id="searchText" placeholder="Search contact name, phone number, or email" />
+				<button type="button" id="addContactButton" class="interiorButtons" data-toggle="modal"
+					data-target="#addContactModal">
+					Add Contact
+				</button>
+			</div>
+			<span style="margin-left: 15px; color: green; font-size: medium;" id="contactAddResult"></span><br />
+
+			<!-- Modal -->
+			<div class="modal fade" id="addContactModal" role="dialog" style="position: fixed; margin: auto;">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								onclick="closeModal();">&times;</button>
+							<h4 class="modal-title">Enter Contact Information</h4>
+						</div>
+						<div class="modal-body">
+							<form id="contactForm" style="font-family: 'Ubuntu', sans-serif;">
+								<label for="contactFirstName" class="infoLabels">First name</label>
+								<input class="form-control" id="contactFirstName" placeholder="Enter first name">
+								<label for="contactLastName" class="infoLabels">Last name</label>
+								<input class="form-control" id="contactLastName" placeholder="Enter last name">
+								<label for="contactNumber" class="infoLabels">Phone number</label>
+								<input class="form-control" id="contactNumber" placeholder="Enter phone number">
+								<label for="contactEmail" class="infoLabels">Email</label>
+								<input class="form-control" id="contactEmail" placeholder="Email"><br />
+								<span id="contactAddError" style="color: red; font-size: medium;"></span>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal"
+								onclick="closeModal();" id="modalClose">Close</button>
+							<button type="button" class="btn btn-default" style="background-color: green; color: white;"
+								onclick="createContact();">Create</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<span id="contactSearchResult"></span>
+			<p id="colorList">
+			</p><br /><br />
+
+		</div>
+	</div>
+
+
 </body>
 
 </html>

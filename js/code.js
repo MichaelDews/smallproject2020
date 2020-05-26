@@ -41,9 +41,13 @@ function doLogin() {
 		saveCookie();
 
 		window.location.href = "contacts.html";
+		document.getElementById("userName").innerHTML = login;
+
+		return jsonObject;
 	}
 	catch (err) {
 		document.getElementById("loginResult").innerHTML = err.message;
+		return null;
 	}
 }
 
@@ -56,13 +60,13 @@ function createAccount() {
 	var password1 = document.getElementById("loginPassword1").value;
 	var password2 = document.getElementById("loginPassword2").value;
 
-	if(firstName == null || firstName == "", lastName == null || lastName == "", 
+	if (firstName == null || firstName == "", lastName == null || lastName == "",
 		userName == null || userName == "", password1 == null || password1 == "", password2 == null || password2 == "") {
-			document.getElementById("createAccountResult").innerHTML = "Please fill all required fields";
-			return;
-		}
+		document.getElementById("createAccountResult").innerHTML = "Please fill all required fields";
+		return;
+	}
 
-	if(password1 != password2) {
+	if (password1 != password2) {
 		document.getElementById("createAccountResult").innerHTML = "Passwords do not match. Please try again";
 		return;
 	}
@@ -124,7 +128,7 @@ function readCookie() {
 		window.location.href = "index.html";
 	}
 	else {
-		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		document.getElementById("userName").innerHTML = firstName + " " + lastName;
 	}
 }
 
@@ -136,12 +140,73 @@ function doLogout() {
 	window.location.href = "index.html";
 }
 
-function addColor() {
-	var newColor = document.getElementById("colorText").value;
-	document.getElementById("colorAddResult").innerHTML = "";
+function changePassword() {
+	var login = document.getElementById("loginName").value;
+	var oldPassword = document.getElementById("loginPassword").value;
+	var newPass1 = document.getElementById("newPass1").value;
+	var newPass2 = document.getElementById("newPass2").value;
+	if (login == null || login == "", oldPassword == null || oldPassword == "",
+		newPass1 == null || newPass1 == "", newPass2 == null || newPass2 == "") {
+		document.getElementById("loginResult").innerHTML = "Please fill all required fields";
+		return;
+	}
+	var userInfo = doLogin();
+	if (userInfo != null) {
+		userId = userInfo.id;
+		if (newPass1 != newPass2) {
+			document.getElementById("login").innerHTML = "New passwords do not match. Please try again";
+		}
 
-	var jsonPayload = '{"color" : "' + newColor + '", "userId" : ' + userId + '}';
-	var url = urlBase + '/AddColor.' + extension;
+		var jsonPayload = `{"userId": "${userId}", "newPassword": "${newPass1}"}`;
+		var url = urlBase + '/ChangePassword.' + extension;
+
+		console.log(jsonPayload);
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, false);
+		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+		try {
+			xhr.send(jsonPayload);
+
+			var jsonObject = JSON.parse(xhr.responseText);
+
+			userId = jsonObject.id;
+
+			saveCookie();
+
+			window.location.href = "index.html";
+		}
+		catch (err) {
+			document.getElementById("createAccountResult").innerHTML = err.message;
+		}
+
+	}
+
+
+}
+
+function createContact() {
+	var firstName = document.getElementById("contactFirstName").value;
+	var lastName = document.getElementById("contactLastName").value;
+	var phoneNumber = document.getElementById("contactNumber").value;
+	var email = document.getElementById("contactEmail").value;
+
+	if ((firstName == null || firstName == "") && (lastName == null || lastName == "") &&
+		(phoneNumber == null || phoneNumber == "") && (email == null || email == "")) {
+		document.getElementById("contactAddError").innerHTML = "Please fill at least one field";
+		return;
+	}
+
+	document.getElementById("contactSearchResult").innerHTML = "";
+
+	var jsonPayload = `{
+		"firstname": "${firstName}",
+		"lastname": "${lastName}",
+		"email": "${email}",
+		"phone": "${phoneNumber}",
+		"userId": "${userId}"
+	}`;
+
+	var url = urlBase + '/AddContact.' + extension;
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -149,14 +214,16 @@ function addColor() {
 	try {
 		xhr.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("colorAddResult").innerHTML = "Color has been added";
+				closeModal();
+				document.getElementById("contactAddResult").innerHTML = "Contact has been added successfully";
 			}
 		};
 		xhr.send(jsonPayload);
 	}
 	catch (err) {
-		document.getElementById("colorAddResult").innerHTML = err.message;
+		document.getElementById("contactAddError").innerHTML = err.message;
 	}
+
 
 }
 
@@ -194,4 +261,10 @@ function searchColor() {
 		document.getElementById("colorSearchResult").innerHTML = err.message;
 	}
 
+}
+
+function closeModal () {
+	document.getElementById("contactAddError").innerHTML = "";
+	document.getElementById("modalClose").click();
+	document.getElementById("contactForm").reset();
 }

@@ -3,7 +3,7 @@ html {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 body 
@@ -20,9 +20,23 @@ body
     width: 100%;
     margin: 30 auto;
     text-align: center;
+    font-family: 'Ubuntu', sans-serif;
+    color: #FFFFFF;
+}
+
+.titleSmall
+{
+    display: inline-block;
+    width: 100%;
+    margin: 10 auto;
     margin-bottom: 2%;
     font-family: 'Ubuntu', sans-serif;
     color: #FFFFFF;
+}
+
+.infoLabels {
+    font-size: medium;
+    margin-top: 10px;
 }
 
 #loginDiv
@@ -30,42 +44,54 @@ body
     font-size: 30px;
     width: 70%;
     margin: auto;
-    padding: 25px;
-    opacity: 1;
+    align-items: center;
 }
 
 #loggedInDiv
 {
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #b2b2b2;
+    font-size: 20px;
+    width: 65%;
+    margin: auto;
+    min-width: 720px;
+    max-width: 1200px;
 }
 
 #accessUIDiv
 {
-    font-size: 30px;
-    width: 70%;
-    margin-left: 15%;
-    padding: 25px;
-    background-color: #b2b2b2;
+    border-radius: 15px;
+    background-color: #FFF;
 }
 
 .buttons
 {
-    font-size: 30px;
-    border-radius: 25px;
-    width: 50%;
-    margin-left: 25%;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 25%;
+    margin-left: 38%;
     font-family: 'Ubuntu', sans-serif;
     margin-bottom: 25px;
 }
 
+.interiorButtons
+{
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 5px;
+    text-align: center;
+    margin-right: 10px;
+    height: 25px;
+    font-family: 'Ubuntu', sans-serif;
+    margin-bottom: 25px;
+    opacity: 0.65;
+}
+
+.interiorButtons:hover {
+    opacity: 1.5;
+}
+
 .buttons:hover{
-    background-color: #00d5124f;
+    background-color: green;
     color: #FFFFFF;
-    opacity: 100;
 }
 
 #loginName,#newLoginName,#firstName,#lastName
@@ -76,9 +102,28 @@ body
 {
 	font-size: 30px;
 }
+
 #searchText
 {
-	font-size: 30px;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left: 10px;
+    max-width: 400px;
+    height: 25px;
+	font-size: 15px;
+}
+
+#search-icon
+{
+    background: url(/images/search.png);
+    min-width: 1000px;
+}
+
+#addContactButton
+{
+    background-color: green;
+    color: #FFF;
+    float: right;
 }
 #colorText
 {
@@ -116,16 +161,27 @@ input[type="text"],input[type="password"]{
     color: #F9FF00;
 }
 
-#userName{
+/* #userName{
     display: inline-block;
     width: 80%;
     margin-left: 10%;
     text-align: center;
-}
+} */
 
 #logoutButton{
-    width: 20%;
+    border: 1px solid black;
+    border-radius: 7px;
+    font-size: medium;
+    height: 3%;
+    width: 9%;
+    position:fixed;
+    right:10px;
+    top:5px;
     margin-left: 40%;
+}
+
+#logoutButton:hover{
+    background-color: red;
 }
 
 select{
