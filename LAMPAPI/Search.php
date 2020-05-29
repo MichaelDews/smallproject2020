@@ -1,21 +1,21 @@
 <?php
 	$inData = getRequestInfo();
-	
+
+	$searchName = nosql($inData["query"]);
+	$userID = nosql($inData["ID"]);
 	$search = "";
 	$searchCount = 0;
-	$searchName = nosql($inData["search"]);
-	$userID = nosql($inData["ID"]);
 
 	$conn = new mysqli("localhost", "username_group3", "cop4331Group3!", "username_group3");
-	
-	if ($conn->connect_error) 
+
+	if ($conn->connect_error)
 	{
 		returnWithError( $conn->connect_error );
-	} 
+	}
 	else
 	{
 		// search is by first name- easy to change
-		$sql = "select * from CONTACTS where FirstName like '%" . $searchName . "%' AND $userID = " . $userID;
+	$sql = "SELECT * FROM Contacts where (FirstName like '$searchName%' or LastName like '$searchName%' or Email like '$searchName%' or Phone like '$searchName%') and UserID=$userID";
 		$result = $conn->query($sql);
 		if ($result->num_rows > 0)
 		{
@@ -26,18 +26,14 @@
 					$search .= ",";
 				}
 				$searchCount++;
-				$search .= '"' . $row["ID"] . ' | ' . $row["FirstName"] . ' | ' . $row["LastName"] . ' | ' . $row["Phone"] . ' | ' . $row["Email"] . ' | ' . $row["DateRecorded"] . '"';
+				$search .= '{"id": "' . $row["ID"] . '", "firstname": "' . $row["FirstName"] . '", "lastName": "' . $row["LastName"] . '", "email": "' . $row["Email"] . '", "phone": "' . $row["Phone"] . '", "DateRecorded": "' . $row["DateRecorded"] . '"}';
 			}
-		}
-		else
-		{
-			returnWithError( "Contact not found" );
 		}
 		$conn->close();
 	}
 	
 	returnWithInfo( $search );
-	
+
 	function getRequestInfo()
 	{
 		return json_decode(file_get_contents('php://input'), true);
@@ -47,19 +43,19 @@
 		header('Content-type: application/json');
 		echo $obj;
 	}
-	
+
 	function returnWithError( $err )
 	{
-		$retValue = '{"result":"","error":"' . $err . '"}';
+		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
 		sendResultInfoAsJson( $retValue );
 	}
-	
+
 	function returnWithInfo( $search )
 	{
 		$retValue = '{"result":[' . $search . '],"error":""}';
 		sendResultInfoAsJson( $retValue );
 	}
-	
+
 	function nosql( $string )
     {
 		// this gets rid of common sql injections in the user input
@@ -76,5 +72,5 @@
 		$string = str_replace( "_", "\\_", $string );
 		return $string;
     }
-	
+
 ?>

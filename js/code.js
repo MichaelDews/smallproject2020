@@ -190,13 +190,10 @@ function createContact() {
 	var phoneNumber = document.getElementById("contactNumber").value;
 	var email = document.getElementById("contactEmail").value;
 
-	if ((firstName == null || firstName == "") && (lastName == null || lastName == "") &&
-		(phoneNumber == null || phoneNumber == "") && (email == null || email == "")) {
-		document.getElementById("contactAddError").innerHTML = "Please fill at least one field";
+	if (firstName == null || firstName == "") {
+		document.getElementById("contactAddError").innerHTML = "Please provide at least a first name";
 		return;
 	}
-
-	document.getElementById("contactSearchResult").innerHTML = "";
 
 	var jsonPayload = `{
 		"firstname": "${firstName}",
@@ -214,27 +211,45 @@ function createContact() {
 	try {
 		xhr.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				closeModal();
+				closeAddModal();
 				document.getElementById("contactAddResult").innerHTML = "Contact has been added successfully";
+				setTimeout(function () {
+					document.getElementById("contactAddError").innerHTML = "";
+				}, 5000);
 			}
 		};
 		xhr.send(jsonPayload);
 	}
 	catch (err) {
 		document.getElementById("contactAddError").innerHTML = err.message;
+
 	}
 
 
 }
 
-function searchColor() {
-	var srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
+function editContact() {
+	var newFirstName = document.getElementById("newFirstName").value;
+	var newLastName = document.getElementById("newLastName").value;
+	var newNumber = document.getElementById("newNumber").value;
+	var newEmail = document.getElementById("newEmail").value;
 
-	var colorList = "";
+	console.log(newFirstName)
 
-	var jsonPayload = '{"search" : "' + srch + '","userId" : ' + userId + '}';
-	var url = urlBase + '/SearchColors.' + extension;
+	if (newFirstName == null || newFirstName == "") {
+		document.getElementById("contactEditError").innerHTML = "Please provide at least a first name";
+		return;
+	}
+
+	var jsonPayload = `{
+		"ID": "${userId}"
+		"newfirstName": "${newFirstName}",
+		"newlastName": "${newLastName}",
+		"newEmail": "${newEmail}",
+		"newPhone": "${newNumber}",
+	}`;
+
+	var url = urlBase + '/UpdateContact.' + extension;
 
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -242,29 +257,120 @@ function searchColor() {
 	try {
 		xhr.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				var jsonObject = JSON.parse(xhr.responseText);
-
-				for (var i = 0; i < jsonObject.results.length; i++) {
-					colorList += jsonObject.results[i];
-					if (i < jsonObject.results.length - 1) {
-						colorList += "<br />\r\n";
-					}
-				}
-
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
+				closeEditModal();
+				document.getElementById("contactAddResult").innerHTML = "Contact has been updated successfully";
+				setTimeout(function () {
+					document.getElementById("contactAddResult").innerHTML = "";
+				}, 5000);
 			}
 		};
 		xhr.send(jsonPayload);
 	}
 	catch (err) {
-		document.getElementById("colorSearchResult").innerHTML = err.message;
+		document.getElementById("contactEditError").innerHTML = err.message;
 	}
+
 
 }
 
-function closeModal () {
+function searchContact() {
+
+	setTimeout(function () {
+		var srch = document.getElementById("searchText").value;
+		var jsonPayload = `{
+			"query": "${srch}",
+			"ID": "${userId}"
+		}`;
+
+		var url = urlBase + '/Search2.' + extension;
+
+		var table = document.getElementById("contacts").getElementsByTagName('tbody')[0];
+		table.innerHTML = "";
+
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+		try {
+			xhr.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					var jsonObject = JSON.parse(xhr.responseText);
+					for (var i = 0; i < jsonObject.result.length; i++) {
+						var newRow = table.insertRow();
+						var fName = newRow.insertCell(0);
+						var fNameText = document.createTextNode(jsonObject.result[i].firstname);
+						fName.appendChild(fNameText);
+
+						var lName = newRow.insertCell(1);
+						var lNameText = document.createTextNode(jsonObject.result[i].lastName);
+						lName.appendChild(lNameText);
+
+						var phone = newRow.insertCell(2);
+						var phoneText = document.createTextNode(jsonObject.result[i].phone);
+						phone.appendChild(phoneText);
+
+						var email = newRow.insertCell(3);
+						var emailText = document.createTextNode(jsonObject.result[i].email);
+						email.appendChild(emailText);
+
+						var date = newRow.insertCell(4);
+						var dateText = document.createTextNode(jsonObject.result[i].DateRecorded);
+						date.appendChild(dateText);
+
+						var buttons = newRow.insertCell(5);
+						var buttonsContent = document.createElement('div');
+						buttonsContent.innerHTML = `
+							<button type="button" id="editContactButton${i}" data-toggle="modal"
+								data-target="#editContactModal"
+								onclick="editContactModal('${jsonObject.result[i].firstname}', '${jsonObject.result[i].lastName}', '${jsonObject.result[i].phone}', '${jsonObject.result[i].email}')"	
+							>
+								<span class="glyphicon glyphicon-pencil" />
+							</button>
+							<button type="button">
+								<span class="glyphicon glyphicon-trash" />
+							</button>
+						`
+						buttons.appendChild(buttonsContent);
+
+					}
+
+					console.log(jsonObject);
+
+					if (jsonObject.result.length < 1) {
+						document.getElementById("contactAddResult").innerHTML = "No contacts were found";
+						table.innerHTML = "";
+					}
+
+					else {
+						document.getElementById("contactAddResult").innerHTML = "";
+					}
+
+
+				}
+			};
+			xhr.send(jsonPayload);
+		}
+		catch (err) {
+			console.log("no results");
+			document.getElementById("contactAddResult").innerHTML = err.message;
+		}
+	}, 500);
+
+}
+
+function editContactModal(firstName, lastName, phone, email) {
+	document.getElementById("newFirstName").value = firstName;
+	document.getElementById("newLastName").value = lastName;
+	document.getElementById("newEmail").value = email;
+	document.getElementById("newNumber").value = phone;
+}
+
+function closeAddModal() {
 	document.getElementById("contactAddError").innerHTML = "";
-	document.getElementById("modalClose").click();
-	document.getElementById("contactForm").reset();
+	document.getElementById("addModalClose").click();
+	document.getElementById("addContactForm").reset();
+}
+
+function closeEditModal() {
+	document.getElementById("contactEditError").innerHTML = "";
+	document.getElementById("editModalClose").click();
 }

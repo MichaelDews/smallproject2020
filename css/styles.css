@@ -9,7 +9,12 @@ html {
 body 
 {
     background: url(../images/background.jpg);
+    
+    min-height: 700px;
+    
     background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
     background-size: 100% 100%;
 }
 
@@ -207,3 +212,26 @@ select{
     font-family: 'Ubuntu', sans-serif;
     color: #95060a;
 }
+
+#contacts {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  #contacts td, #contacts th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  #contacts tr:nth-child(even){background-color: #f2f2f2;}
+  
+  #contacts tr:hover {background-color: #ddd;}
+  
+  #contacts th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+  }

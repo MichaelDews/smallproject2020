@@ -21,10 +21,11 @@
 	<h1 id="title">Contacts</h1>
 
 	<div id="loggedInDiv">
-		<h3 class="titleSmall">Logged in as <span id="userName" class="titleSma">asd</span></h3><br />
+		<h3 class="titleSmall">Logged in as <span id="userName"></span></h3><br />
 		<div id="accessUIDiv">
 			<div style="padding-top: 10px;">
-				<input type="text" id="searchText" placeholder="Search contact name, phone number, or email" />
+				<input type="text" id="searchText" onkeydown="searchContact();"
+					placeholder="Search contact name, phone number, or email" />
 				<button type="button" id="addContactButton" class="interiorButtons" data-toggle="modal"
 					data-target="#addContactModal">
 					Add Contact
@@ -32,18 +33,18 @@
 			</div>
 			<span style="margin-left: 15px; color: green; font-size: medium;" id="contactAddResult"></span><br />
 
-			<!-- Modal -->
+			<!-- Add contact Modal -->
 			<div class="modal fade" id="addContactModal" role="dialog" style="position: fixed; margin: auto;">
 				<div class="modal-dialog">
 					<!-- Modal content-->
 					<div class="modal-content">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal"
-								onclick="closeModal();">&times;</button>
+								onclick="closeAddModal();">&times;</button>
 							<h4 class="modal-title">Enter Contact Information</h4>
 						</div>
 						<div class="modal-body">
-							<form id="contactForm" style="font-family: 'Ubuntu', sans-serif;">
+							<form id="addContactForm" style="font-family: 'Ubuntu', sans-serif;">
 								<label for="contactFirstName" class="infoLabels">First name</label>
 								<input class="form-control" id="contactFirstName" placeholder="Enter first name">
 								<label for="contactLastName" class="infoLabels">Last name</label>
@@ -51,13 +52,13 @@
 								<label for="contactNumber" class="infoLabels">Phone number</label>
 								<input class="form-control" id="contactNumber" placeholder="Enter phone number">
 								<label for="contactEmail" class="infoLabels">Email</label>
-								<input class="form-control" id="contactEmail" placeholder="Email"><br />
+								<input class="form-control" id="contactEmail" placeholder="Enter email"><br />
 								<span id="contactAddError" style="color: red; font-size: medium;"></span>
 							</form>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal"
-								onclick="closeModal();" id="modalClose">Close</button>
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAddModal();"
+								id="addModalClose">Close</button>
 							<button type="button" class="btn btn-default" style="background-color: green; color: white;"
 								onclick="createContact();">Create</button>
 						</div>
@@ -65,10 +66,51 @@
 
 				</div>
 			</div>
-			<span id="contactSearchResult"></span>
-			<p id="colorList">
-			</p><br /><br />
+			<table id="contacts">
+				<thead>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Phone Number</th>
+					<th>Email</th>
+					<th>Date Recorded</th>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
 
+			<!-- Edit contact modal -->
+			<div class="modal fade" id="editContactModal" role="dialog" style="position: fixed; margin: auto;">
+				<div class="modal-dialog">
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal"
+								onclick="closeEditModal();">&times;</button>
+							<h4 class="modal-title">Edit Contact Information</h4>
+						</div>
+						<div class="modal-body">
+							<form id="editContactForm" style="font-family: 'Ubuntu', sans-serif;">
+								<label for="newFirstName" class="infoLabels">First name</label>
+								<input class="form-control" id="newFirstName" placeholder="Enter first name" value="">
+								<label for="newLastName" class="infoLabels">Last name</label>
+								<input class="form-control" id="newLastName" placeholder="Enter last name" value="">
+								<label for="newNumber" class="infoLabels">Phone number</label>
+								<input class="form-control" id="newNumber" placeholder="Enter phone number" value="">
+								<label for="newEmail" class="infoLabels">Email</label>
+								<input class="form-control" id="newEmail" placeholder="Enter email" value=""><br />
+								<span id="contactEditError" style="color: red; font-size: medium;"></span>
+							</form>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeEditModal();"
+								id="editModalClose">Close</button>
+							<button type="button" class="btn btn-default" style="background-color: green; color: white;"
+								onclick="editContact();">Save</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
 		</div>
 	</div>
 

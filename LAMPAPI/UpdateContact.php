@@ -3,11 +3,10 @@
 
     $contactID = $inData["ID"];
     $newFirstName = $inData["newfirstName"];
-		$newLastName = $inData["newlastName"];
-		$newEmail = $inData["newEmail"];
-		$newPhone = $inData["newPhone"];
-		$newDate = $inData["newDate"];
-
+	$newLastName = $inData["newlastName"];
+	$newEmail = $inData["newEmail"];
+	$newPhone = $inData["newPhone"];
+	$newDate = date("Y-m-d");	
 
 	$conn = new mysqli("localhost", "username_group3", "cop4331Group3!", "username_group3");
 	if ($conn->connect_error)
