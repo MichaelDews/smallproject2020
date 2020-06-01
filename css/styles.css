@@ -49,7 +49,7 @@ body
     font-size: 30px;
     width: 70%;
     margin: auto;
-    align-items: center;
+    text-align: center;
 }
 
 #loggedInDiv
@@ -57,7 +57,7 @@ body
     font-size: 20px;
     width: 65%;
     margin: auto;
-    min-width: 720px;
+    min-width: 900px;
     max-width: 1200px;
 }
 
@@ -69,12 +69,16 @@ body
 
 .buttons
 {
-    font-size: 20px;
+    display: block;
+    font-size: 18px;
     border-radius: 10px;
-    width: 25%;
-    margin-left: 38%;
+    text-align: center;
+    margin: auto;
+    /* width: 15%; */
+    min-width: 10%;
+    max-width: 150px;
     font-family: 'Ubuntu', sans-serif;
-    margin-bottom: 25px;
+    margin-bottom: 3px;
 }
 
 .interiorButtons
@@ -99,13 +103,13 @@ body
     color: #FFFFFF;
 }
 
-#loginName,#newLoginName,#firstName,#lastName
+#loginName,#newLoginName,#firstName,#lastName,#oldPass
 {
-	font-size: 30px;
+	font-size: 25px;
 }
-#loginPassword,#loginPassword1,#loginPassword2
+#loginPassword,#loginPassword1,#loginPassword2,#newPass1,#newPass2
 {
-	font-size: 30px;
+	font-size: 25px;
 }
 
 #searchText
@@ -136,11 +140,10 @@ body
 }
 
 input[type="text"],input[type="password"]{
-    border-radius: 25px;
+    border-radius: 15px;
     text-align: center;
-    width: 80%;
-    margin-left: 10%;
-    margin-bottom: 2%;
+    margin: auto;
+    margin-bottom: 10px;
     font-family: 'Ubuntu', sans-serif;
 }
 
@@ -149,18 +152,17 @@ input[type="text"],input[type="password"]{
     font-size: 0.8em;
     width: 90%;
     text-align: center;
-    margin-left: 5%;
     margin-bottom: 2%;
     font-family: 'Ubuntu', sans-serif;
     color: #F9FF00;
 }
 
-#loginResult,#createAccountResult{
+#loginResult,#createAccountResult, #changePasswordResult{
     display: inline-block;
     font-size: 0.8em;
     width: 90%;
     text-align: center;
-    margin-left: 5%;
+    /* margin-left: 5%; */
     margin-bottom: 2%;
     font-family: 'Ubuntu', sans-serif;
     color: #F9FF00;
@@ -183,6 +185,23 @@ input[type="text"],input[type="password"]{
     right:10px;
     top:5px;
     margin-left: 40%;
+    min-width: 77px;
+    max-width: 110px;
+}
+
+#changePassButton{
+    border: 1px solid black;
+    border-radius: 7px;
+    font-size: medium;
+    height: 3%;
+    width: 9%;
+    position:fixed;
+    right:2px;
+    top:5px;
+    margin-left: 40%;
+    min-width: 149px;
+    max-width: 150px;
+    margin-right: 120px;
 }
 
 #logoutButton:hover{

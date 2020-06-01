@@ -1,7 +1,7 @@
 <?php
 	$inData = getRequestInfo();
 	
-    $userId = $inData["userId"];
+	$userId = $inData["userId"];
     $newPass = $inData["newpass"];
 
 	$conn = new mysqli("localhost", "username_group3", "cop4331Group3!", "username_group3");
@@ -11,7 +11,7 @@
 	} 
 	else
 	{
-        $sql = "update Users set Password='$newPass' where ID=$userId";
+        $sql = "UPDATE Users set Password='$newPass' where ID=$userId";
 		if( $result = $conn->query($sql) != TRUE )
 		{
 			returnWithError( $conn->error );

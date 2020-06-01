@@ -18,13 +18,14 @@
 <body>
 
 	<button type="button" id="logoutButton" class="buttons" onclick="doLogout();"> Sign out </button>
+	<button type="button" id="changePassButton" class="buttons" onclick="window.location.href = 'changepass.html';">Change Password</button>
 	<h1 id="title">Contacts</h1>
 
 	<div id="loggedInDiv">
 		<h3 class="titleSmall">Logged in as <span id="userName"></span></h3><br />
 		<div id="accessUIDiv">
 			<div style="padding-top: 10px;">
-				<input type="text" id="searchText" onkeydown="searchContact();"
+				<input type="text" id="searchText" style="min-width: 350px;"  onkeydown="searchContact(false);"
 					placeholder="Search contact name, phone number, or email" />
 				<button type="button" id="addContactButton" class="interiorButtons" data-toggle="modal"
 					data-target="#addContactModal">
@@ -45,7 +46,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="addContactForm" style="font-family: 'Ubuntu', sans-serif;">
-								<label for="contactFirstName" class="infoLabels">First name</label>
+								<label for="contactFirstName" class="infoLabels">First name*</label>
 								<input class="form-control" id="contactFirstName" placeholder="Enter first name">
 								<label for="contactLastName" class="infoLabels">Last name</label>
 								<input class="form-control" id="contactLastName" placeholder="Enter last name">
@@ -90,7 +91,7 @@
 						</div>
 						<div class="modal-body">
 							<form id="editContactForm" style="font-family: 'Ubuntu', sans-serif;">
-								<label for="newFirstName" class="infoLabels">First name</label>
+								<label for="newFirstName" class="infoLabels">First name*</label>
 								<input class="form-control" id="newFirstName" placeholder="Enter first name" value="">
 								<label for="newLastName" class="infoLabels">Last name</label>
 								<input class="form-control" id="newLastName" placeholder="Enter last name" value="">

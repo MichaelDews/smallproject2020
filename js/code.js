@@ -4,6 +4,8 @@ var extension = 'php';
 var userId = 0;
 var firstName = "";
 var lastName = "";
+var pass;
+var currentContactId = 0;
 
 function doLogin() {
 	userId = 0;
@@ -12,34 +14,34 @@ function doLogin() {
 
 	var login = document.getElementById("loginName").value;
 	var password = document.getElementById("loginPassword").value;
-	//	var hash = md5( password );
-
+	console.log(pass)
+	var hash = md5(password);
 	document.getElementById("loginResult").innerHTML = "";
-
-	//	var jsonPayload = '{"login" : "' + login + '", "password" : "' + hash + '"}';
-	var jsonPayload = '{"login" : "' + login + '", "password" : "' + password + '"}';
+	
+	var jsonPayload = '{"login" : "' + login + '", "password" : "' + hash + '"}';
 	var url = urlBase + '/Login.' + extension;
-
+	
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, false);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	try {
 		xhr.send(jsonPayload);
-
+		
 		var jsonObject = JSON.parse(xhr.responseText);
-
+		
 		userId = jsonObject.id;
-
+		pass = hash;
+		
 		if (userId < 1) {
 			document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
 			return;
 		}
-
+		
 		firstName = jsonObject.firstName;
 		lastName = jsonObject.lastName;
-
+		
 		saveCookie();
-
+		
 		window.location.href = "contacts.html";
 		document.getElementById("userName").innerHTML = login;
 
@@ -71,28 +73,29 @@ function createAccount() {
 		return;
 	}
 
-	//	var hash = md5( password );
-
 	document.getElementById("createAccountResult").innerHTML = "";
 
-	//	var jsonPayload = '{"login" : "' + login + '", "password" : "' + hash + '"}';
-	var jsonPayload = `{"firstName": "${firstName}", "lastName": "${lastName}", "login": "${userName}", "password": "${password1}"}`;
+	var hash = md5(password1);
+	var jsonPayload = `{"firstName": "${firstName}", "lastName": "${lastName}", "login": "${userName}", "password": "${hash}"}`;
 	var url = urlBase + '/AddLogin.' + extension;
-
+	
 	console.log(jsonPayload);
 	var xhr = new XMLHttpRequest();
 	xhr.open("POST", url, false);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 	try {
 		xhr.send(jsonPayload);
-
+		
 		var jsonObject = JSON.parse(xhr.responseText);
-
+		
 		userId = jsonObject.id;
-
+		pass = hash;
+		
 		saveCookie();
-
+		
 		window.location.href = "contacts.html";
+		document.getElementById("userName").innerHTML = login;
+
 	}
 	catch (err) {
 		document.getElementById("createAccountResult").innerHTML = err.message;
@@ -103,7 +106,7 @@ function saveCookie() {
 	var minutes = 20;
 	var date = new Date();
 	date.setTime(date.getTime() + (minutes * 60 * 1000));
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",pass=" + pass + ";expires=" + date.toGMTString();
 }
 
 function readCookie() {
@@ -121,6 +124,9 @@ function readCookie() {
 		}
 		else if (tokens[0] == "userId") {
 			userId = parseInt(tokens[1].trim());
+		}
+		else if (tokens[0] == "pass") {
+			pass = tokens[1];
 		}
 	}
 
@@ -141,46 +147,45 @@ function doLogout() {
 }
 
 function changePassword() {
-	var login = document.getElementById("loginName").value;
-	var oldPassword = document.getElementById("loginPassword").value;
+	var oldPassword = document.getElementById("oldPass").value;
 	var newPass1 = document.getElementById("newPass1").value;
 	var newPass2 = document.getElementById("newPass2").value;
-	if (login == null || login == "", oldPassword == null || oldPassword == "",
+
+	if (oldPassword == null || oldPassword == "",
 		newPass1 == null || newPass1 == "", newPass2 == null || newPass2 == "") {
-		document.getElementById("loginResult").innerHTML = "Please fill all required fields";
+		document.getElementById("changePasswordResult").innerHTML = "Please fill all required fields";
 		return;
 	}
-	var userInfo = doLogin();
-	if (userInfo != null) {
-		userId = userInfo.id;
-		if (newPass1 != newPass2) {
-			document.getElementById("login").innerHTML = "New passwords do not match. Please try again";
-		}
 
-		var jsonPayload = `{"userId": "${userId}", "newPassword": "${newPass1}"}`;
-		var url = urlBase + '/ChangePassword.' + extension;
-
-		console.log(jsonPayload);
-		var xhr = new XMLHttpRequest();
-		xhr.open("POST", url, false);
-		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-		try {
-			xhr.send(jsonPayload);
-
-			var jsonObject = JSON.parse(xhr.responseText);
-
-			userId = jsonObject.id;
-
-			saveCookie();
-
-			window.location.href = "index.html";
-		}
-		catch (err) {
-			document.getElementById("createAccountResult").innerHTML = err.message;
-		}
-
+	if (newPass1 != newPass2) {
+		document.getElementById("changePasswordResult").innerHTML = "New passwords do not match. Please try again";
+		return;
 	}
 
+	if(md5(oldPassword) != pass) {
+		document.getElementById("changePasswordResult").innerHTML = "Current password is incorrect. Please try again";
+		return;
+	}
+	
+	var hash = md5(newPass1);
+	var jsonPayload = `{"userId": "${userId}", "newpass": "${hash}"}`;
+	var url = urlBase + '/ChangePassword.' + extension;
+
+	console.log(jsonPayload);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", url, false);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	try {
+		xhr.send(jsonPayload);
+		
+		saveCookie();
+
+		window.location.href = "contacts.html";
+		document.getElementById("userName").innerHTML = login;
+	}
+	catch (err) {
+		document.getElementById("changePasswordResult").innerHTML = err.message;
+	}
 
 }
 
@@ -213,8 +218,9 @@ function createContact() {
 			if (this.readyState == 4 && this.status == 200) {
 				closeAddModal();
 				document.getElementById("contactAddResult").innerHTML = "Contact has been added successfully";
+				searchContact(true);
 				setTimeout(function () {
-					document.getElementById("contactAddError").innerHTML = "";
+					document.getElementById("contactAddResult").innerHTML = "";
 				}, 5000);
 			}
 		};
@@ -234,20 +240,20 @@ function editContact() {
 	var newNumber = document.getElementById("newNumber").value;
 	var newEmail = document.getElementById("newEmail").value;
 
-	console.log(newFirstName)
-
 	if (newFirstName == null || newFirstName == "") {
 		document.getElementById("contactEditError").innerHTML = "Please provide at least a first name";
 		return;
 	}
 
 	var jsonPayload = `{
-		"ID": "${userId}"
+		"ID": "${currentContactId}",
 		"newfirstName": "${newFirstName}",
 		"newlastName": "${newLastName}",
 		"newEmail": "${newEmail}",
-		"newPhone": "${newNumber}",
+		"newPhone": "${newNumber}"
 	}`;
+
+	console.log(jsonPayload)
 
 	var url = urlBase + '/UpdateContact.' + extension;
 
@@ -259,6 +265,7 @@ function editContact() {
 			if (this.readyState == 4 && this.status == 200) {
 				closeEditModal();
 				document.getElementById("contactAddResult").innerHTML = "Contact has been updated successfully";
+				searchContact(true);
 				setTimeout(function () {
 					document.getElementById("contactAddResult").innerHTML = "";
 				}, 5000);
@@ -273,7 +280,7 @@ function editContact() {
 
 }
 
-function searchContact() {
+function searchContact(flag) {
 
 	setTimeout(function () {
 		var srch = document.getElementById("searchText").value;
@@ -321,11 +328,11 @@ function searchContact() {
 						buttonsContent.innerHTML = `
 							<button type="button" id="editContactButton${i}" data-toggle="modal"
 								data-target="#editContactModal"
-								onclick="editContactModal('${jsonObject.result[i].firstname}', '${jsonObject.result[i].lastName}', '${jsonObject.result[i].phone}', '${jsonObject.result[i].email}')"	
+								onclick="editContactModal('${jsonObject.result[i].firstname}', '${jsonObject.result[i].lastName}', '${jsonObject.result[i].phone}', '${jsonObject.result[i].email}', ${jsonObject.result[i].id})"	
 							>
 								<span class="glyphicon glyphicon-pencil" />
 							</button>
-							<button type="button">
+							<button type="button" onclick="deleteContact(${jsonObject.result[i].id});">
 								<span class="glyphicon glyphicon-trash" />
 							</button>
 						`
@@ -340,8 +347,12 @@ function searchContact() {
 						table.innerHTML = "";
 					}
 
-					else {
+					else if (!flag) {
 						document.getElementById("contactAddResult").innerHTML = "";
+					}
+
+					else {
+						return;
 					}
 
 
@@ -357,11 +368,43 @@ function searchContact() {
 
 }
 
-function editContactModal(firstName, lastName, phone, email) {
+function deleteContact(contactID) {
+	var jsonPayload = `{
+		"contactID": "${contactID}"
+	}`;
+
+	var url = urlBase + '/DeleteContact.' + extension;
+
+	if (window.confirm("Are you sure you would like to delete this contact?")) {
+		var xhr = new XMLHttpRequest();
+		xhr.open("POST", url, true);
+		xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+		try {
+			xhr.onreadystatechange = function () {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById("contactAddResult").innerHTML = "Contact has been deleted successfully";
+					setTimeout(function () {
+						document.getElementById("contactAddResult").innerHTML = "";
+						searchContact(true);
+					}, 5000);
+				}
+			};
+			xhr.send(jsonPayload);
+		}
+		catch (err) {
+			document.getElementById("contactAddError").innerHTML = err.message;
+		}
+	}
+
+
+}
+
+function editContactModal(firstName, lastName, phone, email, contactId) {
 	document.getElementById("newFirstName").value = firstName;
 	document.getElementById("newLastName").value = lastName;
 	document.getElementById("newEmail").value = email;
 	document.getElementById("newNumber").value = phone;
+	currentContactId = contactId;
 }
 
 function closeAddModal() {
