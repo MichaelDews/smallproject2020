@@ -7,11 +7,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-	<script type="text/javascript">
+	<!-- <script type="text/javascript">
 		document.addEventListener('DOMContentLoaded', function () {
 			readCookie();
 		}, false);
-	</script>
+	</script> -->
 
 </head>
 
@@ -27,6 +27,9 @@
 			<div style="padding-top: 10px;">
 				<input type="text" id="searchText" style="min-width: 350px;"  onkeydown="searchContact(false);"
 					placeholder="Search contact name, phone number, or email" />
+				<button type="button" id="seeAllContactsButton" class="interiorButtons" onclick="document.getElementById('searchText').value=''; searchContact(true);">
+					See All Contacts
+				</button>
 				<button type="button" id="addContactButton" class="interiorButtons" data-toggle="modal"
 					data-target="#addContactModal">
 					Add Contact
@@ -51,7 +54,7 @@
 								<label for="contactLastName" class="infoLabels">Last name</label>
 								<input class="form-control" id="contactLastName" placeholder="Enter last name">
 								<label for="contactNumber" class="infoLabels">Phone number</label>
-								<input class="form-control" id="contactNumber" placeholder="Enter phone number">
+								<input class="form-control" id="contactNumber" placeholder="Enter phone number" type="number">
 								<label for="contactEmail" class="infoLabels">Email</label>
 								<input class="form-control" id="contactEmail" placeholder="Enter email"><br />
 								<span id="contactAddError" style="color: red; font-size: medium;"></span>
@@ -96,7 +99,7 @@
 								<label for="newLastName" class="infoLabels">Last name</label>
 								<input class="form-control" id="newLastName" placeholder="Enter last name" value="">
 								<label for="newNumber" class="infoLabels">Phone number</label>
-								<input class="form-control" id="newNumber" placeholder="Enter phone number" value="">
+								<input class="form-control" id="newNumber" placeholder="Enter phone number" value="" type="number">
 								<label for="newEmail" class="infoLabels">Email</label>
 								<input class="form-control" id="newEmail" placeholder="Enter email" value=""><br />
 								<span id="contactEditError" style="color: red; font-size: medium;"></span>

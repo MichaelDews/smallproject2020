@@ -93,8 +93,8 @@ function createAccount() {
 		
 		saveCookie();
 		
-		window.location.href = "contacts.html";
-		document.getElementById("userName").innerHTML = login;
+		window.location.href = "index.html";
+		//document.getElementById("userName").innerHTML = login;
 
 	}
 	catch (err) {

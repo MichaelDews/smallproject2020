@@ -92,6 +92,7 @@ body
     font-family: 'Ubuntu', sans-serif;
     margin-bottom: 25px;
     opacity: 0.65;
+    font-weight: bold;
 }
 
 .interiorButtons:hover {
@@ -254,3 +255,19 @@ select{
     background-color: #4CAF50;
     color: white;
   }
+
+#contactNumber,#newNumber {
+    -moz-appearance: textfield;
+}
+
+#contactNumber::-webkit-outer-spin-button,
+#contactNumber::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#newNumber::-webkit-outer-spin-button,
+#newNumber::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
